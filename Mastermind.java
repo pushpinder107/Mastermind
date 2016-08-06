@@ -13,10 +13,35 @@ public class Mastermind {
 	private static final int EASY = 1;
 	private static final int MEDIUM = 2;
 	private static final int HARD = 3;
-	private static List<String> list;
+	private static ArrayList<String> list;
 
 	public static void main(String args[]) {
-		play();
+		ArrayList<String> listOfAll = allPossibleWords(HARD);
+		while (true) {
+			list = (ArrayList<String>) listOfAll.clone();
+			play();
+		}
+	}
+
+	public static void play() {
+		int wordLength = getDifficulty();
+		String hiddenWord = getRandomWord(wordLength);
+
+		boolean userWon = false;
+		boolean computerWon = false;
+		while (!(userWon || computerWon)) {
+			userWon = userGuesses(hiddenWord);
+			if (userWon) {
+				System.out.println("User is victorious");
+				return;
+			}
+			computerWon = computerGuesses();
+			if (computerWon) {
+				System.out.println("Computer won");
+				System.out.println("User needed to guess : " + hiddenWord);
+				return;
+			}
+		}
 	}
 
 	/*
@@ -39,35 +64,6 @@ public class Mastermind {
 		return false;
 	}
 
-	public static void play() {
-		int wordLength = getDifficulty();
-		String hiddenWord = getRandomWord(wordLength);
-		list = allPossibleWords(wordLength);
-		boolean userWon = false;
-		boolean computerWon = false;
-		while (!(userWon || computerWon)) {
-			userWon = userGuesses(hiddenWord);
-			if (userWon) {
-				System.out.println("User is victorious");
-				return;
-			}
-			computerWon = computerGuesses();
-			if (computerWon) {
-				System.out.println("Computer won");
-				System.out.println("User needed to guess : " + hiddenWord);
-				return;
-			}
-		}
-	}
-
-	private static int getDifficulty() {
-		System.out.println("Please choose a difficulty -> \n1 for easy \n2 for medium\n3 for hard \n : ");
-		Scanner input = new Scanner(System.in);
-		int difficultyChoice = input.nextInt();
-		int wordLength = getWordLength(difficultyChoice);
-		return wordLength;
-	}
-
 	private static boolean computerGuesses() {
 		System.out.println("COMPUTERS TURN");
 
@@ -81,9 +77,17 @@ public class Mastermind {
 		}
 		System.out.println("How many matches : ");
 		int matchCount = input.nextInt();
-		list = trimList(randomGuess, matchCount, list);
+		list = (ArrayList<String>) trimList(randomGuess, matchCount, list);
 		randomGuess = getRandomFromList(list);
 		return false;
+	}
+
+	private static int getDifficulty() {
+		System.out.println("Please choose a difficulty -> \n1 for easy \n2 for medium\n3 for hard \n : ");
+		Scanner input = new Scanner(System.in);
+		int difficultyChoice = input.nextInt();
+		int wordLength = getWordLength(difficultyChoice);
+		return wordLength;
 	}
 
 	private static int getWordLength(int choice) {
@@ -138,7 +142,7 @@ public class Mastermind {
 		return newList;
 	}
 
-	private static List<String> allPossibleWords(int length) {
+	private static ArrayList<String> allPossibleWords(int length) {
 		String path = "C:\\Users\\pushpisingh\\Desktop\\sowpods.txt";
 		ArrayList<String> words = new ArrayList<String>();
 		FileInputStream inputStream = null;

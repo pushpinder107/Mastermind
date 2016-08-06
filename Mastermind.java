@@ -125,12 +125,7 @@ public class Mastermind {
 	private static List<String> trimList(String word, int matchCount, ArrayList<String> previousList) {
 		List<String> newList = new ArrayList<>();
 		if (matchCount == 0) {
-			for (String str : previousList) {
-				if (!(getMatchCount(word, str) == 0)) {
-					newList.add(str);
-				}
-			}
-			return newList;
+			return previousList;
 		}
 
 		for (String str : previousList) {

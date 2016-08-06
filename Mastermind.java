@@ -77,6 +77,7 @@ public class Mastermind {
 					System.out.println("I have guessed an anagram!");
 				}
 				list = trimList(randomGuess, matchCount, list);
+				System.out.println("List : "+list);
 				randomGuess = getRandomFromList(list);
 			}
 		}
@@ -100,7 +101,7 @@ public class Mastermind {
 
 	private static int getRandomNumber(int limit) {
 		Random rand = new Random();
-		return rand.nextInt(limit) + 1;
+		return rand.nextInt(limit);
 	}
 
 	private static int getMatchCount(String guess, String hidden) {
@@ -123,6 +124,9 @@ public class Mastermind {
 	}
 
 	private static List<String> trimList(String word, int matchCount, List<String> previousList) {
+		if(matchCount ==0) {
+			return previousList;
+		}
 		List<String> newList = new ArrayList<>();
 		for (String str : previousList) {
 			if (getMatchCount(str, word) == matchCount) {
@@ -171,6 +175,7 @@ public class Mastermind {
 
 	private static String getRandomFromList(List<String> list) {
 		int random = getRandomNumber(list.size());
+		System.out.println("Random number : " + random + " Size: "+list.size());
 		return list.get(random);
 	}
 

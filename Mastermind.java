@@ -16,7 +16,6 @@ public class Mastermind {
 	private static ArrayList<String> list;
 
 	public static void main(String args[]) {
-		ArrayList<String> listOfAll = allPossibleWords(HARD);
 		while (true) {
 			play();
 		}

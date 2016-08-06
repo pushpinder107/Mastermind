@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -28,6 +29,7 @@ public class Mastermind {
 		boolean userWon = false;
 		boolean computerWon = false;
 		while (!(userWon || computerWon)) {
+			System.out.println("Size" + list.size());
 			userWon = userGuesses(hiddenWord);
 			if (userWon) {
 				System.out.println("User is victorious");
@@ -44,7 +46,7 @@ public class Mastermind {
 
 	public static boolean userGuesses(String hiddenWord) {
 		System.out.println("USER'S TURN ");
-		// System.out.println(hiddenWord);
+		// System.out.println("Secret:" + hiddenWord);
 		String guess = getStringFromUser();
 		if (guess.equals(hiddenWord)) {
 			System.out.println("Your guess is correct!");
@@ -120,16 +122,23 @@ public class Mastermind {
 
 	}
 
-	private static List<String> trimList(String word, int matchCount, List<String> previousList) {
-		if (matchCount == 0) {
-			return previousList;
-		}
+	private static List<String> trimList(String word, int matchCount, ArrayList<String> previousList) {
 		List<String> newList = new ArrayList<>();
+		if (matchCount == 0) {
+			for (String str : previousList) {
+				if (!(getMatchCount(word, str) == 0)) {
+					newList.add(str);
+				}
+			}
+			return newList;
+		}
+
 		for (String str : previousList) {
 			if (getMatchCount(str, word) == matchCount) {
 				newList.add(str);
 			}
 		}
+
 		return newList;
 	}
 

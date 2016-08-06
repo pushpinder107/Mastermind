@@ -13,39 +13,50 @@ public class Mastermind {
 	private static final int EASY = 1;
 	private static final int MEDIUM = 2;
 	private static final int HARD = 3;
+	private static List<String> list;
 
 	public static void main(String args[]) {
-
-		// System.out.println(allPossibleWords(5));
-
-		startPlaying();
-		// System.out.println(getMatchCount("hhelp", "lpeht"));
+		play();
 	}
 
-	public static void startPlaying() {
-		System.out.println("Enter 1 to guess\nEnter 2 to let me guess \n: ");
-		Scanner input = new Scanner(System.in);
-		int choice = input.nextInt();
-		if (choice == 1) {
-			userGuesses();
-		} else {
-			computerGuesses();
+	/*
+	 * public static void startPlaying() {
+	 * System.out.println("Enter 1 to guess\nEnter 2 to let me guess \n: ");
+	 * Scanner input = new Scanner(System.in); int choice = input.nextInt(); if
+	 * (choice == 1) { userGuesses(); } else { computerGuesses(); } }
+	 */
+
+	public static boolean userGuesses(String hiddenWord) {
+		System.out.println("USER'S TURN ");
+		// System.out.println(hiddenWord);
+		String guess = getStringFromUser();
+		if (guess.equals(hiddenWord)) {
+			System.out.println("Your guess is correct!");
+			return true;
 		}
+		int matchCount = getMatchCount(guess, hiddenWord);
+		System.out.println("You got " + matchCount + " letters correct!");
+		return false;
 	}
 
-	public static void userGuesses() {
+	public static void play() {
 		int wordLength = getDifficulty();
 		String hiddenWord = getRandomWord(wordLength);
-		System.out.println(hiddenWord);
-		boolean isGameOver = false;
-		while (!isGameOver) {
-			String guess = getStringFromUser();
-			if (guess.equals(hiddenWord)) {
-				System.out.println("Your guess is correct!");
-				isGameOver = true;
+		list = allPossibleWords(wordLength);
+		boolean userWon = false;
+		boolean computerWon = false;
+		while (!(userWon || computerWon)) {
+			userWon = userGuesses(hiddenWord);
+			if (userWon) {
+				System.out.println("User is victorious");
+				return;
 			}
-			int matchCount = getMatchCount(guess, hiddenWord);
-			System.out.println("You got " + matchCount + " letters correct!");
+			computerWon = computerGuesses();
+			if (computerWon) {
+				System.out.println("Computer won");
+				System.out.println("User needed to guess : " + hiddenWord);
+				return;
+			}
 		}
 	}
 
@@ -57,31 +68,22 @@ public class Mastermind {
 		return wordLength;
 	}
 
-	private static void computerGuesses() {
-		int wordLength = getDifficulty();
-		boolean isGuessCorrect = false;
-		String randomGuess = getRandomWord(wordLength);
-		List<String> list = allPossibleWords(wordLength);
-		while (!isGuessCorrect) {
-			Scanner input = new Scanner(System.in);
-			System.out.println("I guess : " + randomGuess);
-			System.out.println("Is my guess correct?(y/n) :");
-			String isCorrect = input.next();
-			if (isCorrect.equalsIgnoreCase("Y")) {
-				System.out.println("Victory!!!");
-				isGuessCorrect = true;
-			} else {
-				System.out.println("How many matches : ");
-				int matchCount = input.nextInt();
-				if (matchCount == wordLength) {
-					System.out.println("I have guessed an anagram!");
-				}
-				list = trimList(randomGuess, matchCount, list);
-				System.out.println("List : "+list);
-				randomGuess = getRandomFromList(list);
-			}
-		}
+	private static boolean computerGuesses() {
+		System.out.println("COMPUTERS TURN");
 
+		Scanner input = new Scanner(System.in);
+		String randomGuess = getRandomFromList(list);
+		System.out.println("I guess : " + randomGuess);
+		System.out.println("Is my guess correct?(y/n) :");
+		String isCorrect = input.next();
+		if (isCorrect.equalsIgnoreCase("Y")) {
+			return true;
+		}
+		System.out.println("How many matches : ");
+		int matchCount = input.nextInt();
+		list = trimList(randomGuess, matchCount, list);
+		randomGuess = getRandomFromList(list);
+		return false;
 	}
 
 	private static int getWordLength(int choice) {
@@ -124,7 +126,7 @@ public class Mastermind {
 	}
 
 	private static List<String> trimList(String word, int matchCount, List<String> previousList) {
-		if(matchCount ==0) {
+		if (matchCount == 0) {
 			return previousList;
 		}
 		List<String> newList = new ArrayList<>();
@@ -175,7 +177,6 @@ public class Mastermind {
 
 	private static String getRandomFromList(List<String> list) {
 		int random = getRandomNumber(list.size());
-		System.out.println("Random number : " + random + " Size: "+list.size());
 		return list.get(random);
 	}
 

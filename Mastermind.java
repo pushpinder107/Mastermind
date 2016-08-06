@@ -18,7 +18,6 @@ public class Mastermind {
 	public static void main(String args[]) {
 		ArrayList<String> listOfAll = allPossibleWords(HARD);
 		while (true) {
-			list = (ArrayList<String>) listOfAll.clone();
 			play();
 		}
 	}
@@ -26,7 +25,7 @@ public class Mastermind {
 	public static void play() {
 		int wordLength = getDifficulty();
 		String hiddenWord = getRandomWord(wordLength);
-
+		list = allPossibleWords(wordLength);
 		boolean userWon = false;
 		boolean computerWon = false;
 		while (!(userWon || computerWon)) {
@@ -43,13 +42,6 @@ public class Mastermind {
 			}
 		}
 	}
-
-	/*
-	 * public static void startPlaying() {
-	 * System.out.println("Enter 1 to guess\nEnter 2 to let me guess \n: ");
-	 * Scanner input = new Scanner(System.in); int choice = input.nextInt(); if
-	 * (choice == 1) { userGuesses(); } else { computerGuesses(); } }
-	 */
 
 	public static boolean userGuesses(String hiddenWord) {
 		System.out.println("USER'S TURN ");
